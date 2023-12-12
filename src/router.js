@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
-import login from "./views/Auth/login.vue";
-import register from "./views/Auth/register.vue";
+import login from "./views/Auth/Login.vue";
+import register from "./views/Auth/Register.vue";
 import dashboard from "./views/Dashboard.vue";
 import penilaianLapangan from "./views/Penilaian-Lapangan/Penilaian-Lapangan.vue";
 import historyLapangan from "./views/Penilaian-Lapangan/History-Lapangan.vue";
