@@ -1,0 +1,53 @@
+{
+	"routes": [
+		{
+			"src": "/",
+			"dest": "/"
+		},
+		{
+			"src": "/register",
+			"dest": "register"
+		},
+		{
+			"src": "/dashboard",
+			"dest": "dashboard"
+		},
+		{
+			"src": "/history-lapangan",
+			"dest": "historyLapangan"
+		},
+		{
+			"src": "/penilaian-lapangan",
+			"dest": "penilaianLapangan"
+		},
+		{
+			"src": "/penilaian-yelyel",
+			"dest": "penilaianYelyel"
+		},
+		{
+			"src": "/detail/:teamName/:timestamp",
+			"dest": "detailNilai"
+		},
+		{
+			"src": "/history-lapangan-admin",
+			"dest": "adminLapangan"
+		},
+		{
+			"src": "/history-yelyel-admin",
+			"dest": "adminYelyel"
+		},
+
+		{
+			"src": "/presentasi",
+			"dest": "homePresentasi"
+		},
+		{
+			"src": "/presentasi/detail-presentasi",
+			"dest": "detailPresentasi"
+		},
+		{
+			"src": "/:catchAll(.*)",
+			"dest": "notFound"
+		}
+	]
+}
