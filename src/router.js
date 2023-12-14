@@ -25,48 +25,48 @@ const routes = [
 	{
 		path: "/dashboard",
 		component: dashboard,
-		beforeEnter: checkAuthorization,
+		// beforeEnter: checkAuthorization,
 	},
 	{
 		path: "/history-lapangan",
 		component: historyLapangan,
-		beforeEnter: checkAuthorization,
+		// beforeEnter: checkAuthorization,
 	},
 	{
 		path: "/penilaian-lapangan",
 		component: penilaianLapangan,
-		beforeEnter: checkAuthorization,
+		// beforeEnter: checkAuthorization,
 	},
 	{
 		path: "/penilaian-yelyel",
 		component: penilaianYelyel,
-		beforeEnter: checkAuthorization,
+		// beforeEnter: checkAuthorization,
 	},
 	{
 		path: "/detail/:teamName/:timestamp",
 		component: detailNilai,
-		beforeEnter: checkAuthorization,
+		// beforeEnter: checkAuthorization,
 	},
 	{
 		path: "/history-lapangan-admin",
 		component: adminLapangan,
-		beforeEnter: checkAuthorization,
+		// beforeEnter: checkAuthorization,
 	},
 	{
 		path: "/history-yelyel-admin",
 		component: adminYelyel,
-		beforeEnter: checkAuthorization,
+		// beforeEnter: checkAuthorization,
 	},
 
 	{
 		path: "/presentasi",
 		component: homePresentasi,
-		beforeEnter: checkAuthorization,
+		// beforeEnter: checkAuthorization,
 	},
 	{
 		path: "/presentasi/detail-presentasi",
 		component: detailPresentasi,
-		beforeEnter: checkAuthorization,
+		// beforeEnter: checkAuthorization,
 	},
 ];
 
