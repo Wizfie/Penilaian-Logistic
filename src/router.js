@@ -32,7 +32,7 @@ const routes = [
 		path: "/history-lapangan",
 		component: historyLapangan,
 		beforeEnter: checkAuthorization,
-	},
+	},t
 	{
 		path: "/penilaian-lapangan",
 		component: penilaianLapangan,
@@ -70,7 +70,7 @@ const routes = [
 		beforeEnter: checkAuthorization,
 	},
 	{
-		path: "*",
+		path: "/:catchAll(.*)",
 		component: notFound,
 	},
 ];
@@ -84,7 +84,7 @@ function checkAuthorization(to, from, next) {
 	if (localStorage.getItem("userData")) {
 		next();
 	} else {
-		next("*");
+		next("/");
 	}
 }
 
