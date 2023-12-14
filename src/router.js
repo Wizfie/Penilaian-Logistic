@@ -8,17 +8,13 @@ import detailNilai from "./views/Penilaian-Lapangan/Edit-Nilai.vue";
 import penilaianYelyel from "./views/Penilaian-Yelyel/Home-Yelyel.vue";
 import homePresentasi from "./views/Presentasi/Home-Presentasi.vue";
 import detailPresentasi from "./views/Presentasi/Details-Presentasi.vue";
-import notFound from ".components/NotFound.vue";
+import notFound from "./components/NotFound.vue";
 
 // Admin
 import adminLapangan from "./views/Admin/History-Lapangan-admin.vue";
 import adminYelyel from "./views/Admin/History-Yelyel-admin.vue";
 // admin
 const routes = [
-	{
-		path: "*",
-		component: notFound,
-	},
 	{
 		path: "/",
 		component: login,
@@ -72,6 +68,10 @@ const routes = [
 		path: "/presentasi/detail-presentasi",
 		component: detailPresentasi,
 		beforeEnter: checkAuthorization,
+	},
+	{
+		path: "*",
+		component: notFound,
 	},
 ];
 
