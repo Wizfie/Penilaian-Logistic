@@ -9,7 +9,7 @@
 					<h2>The page you are looking for doesn't exist.</h2>
 					<a class="btn" href="/">Back to home</a>
 					<img
-						src="assets/img/not-found.svg"
+						src="./assets/img/not-found.svg"
 						class="img-fluid py-5"
 						alt="Page Not Found"
 					/>
