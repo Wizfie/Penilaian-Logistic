@@ -33,53 +33,71 @@
 							</div>
 
 							<div class="card-body">
-								<div class="card-header">
+								<div class="card-header d-flex justify-content-between">
 									<h5>History</h5>
+									<button class="btn btn-warning d-none">
+										<i class="bi bi-arrow-clockwise"></i>
+									</button>
 								</div>
-								<table v-if="role === `user`" class="table table-striped">
-									<thead>
-										<tr>
-											<th scope="col">#</th>
-											<th scope="col">Team Name</th>
-											<th scope="col">Nilai</th>
-											<th scope="col">Waktu</th>
-											<th scope="col">Action</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr
-											class="table datatable"
-											v-for="(team, index) in teams"
-											:key="index"
-										>
-											<th scope="row">{{ index + 1 }}</th>
-											<td class="fw-normal" style="text-transform: uppercase">
-												{{ team.teamName }}
-											</td>
-											<td class="fw-bold">{{ team.totalNilai }}</td>
-											<td>{{ team.timeStamp }}</td>
-											<td class="d-flex gap-1 flex-wrap">
-												<router-link
-													:to="
-														'/detail/' + team.teamName + '/' + team.timeStamp
-													"
-													class="btn btn-primary"
-												>
-													View
-												</router-link>
-												<button
-													type="button"
-													@click="
-														deleteNilai(user, team.teamName, team.timeStamp)
-													"
-													class="btn btn-danger btn-sm btn-responsive d-none"
-												>
-													Del
-												</button>
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								<div class="card-body">
+									<Label class="form-label fw-semibold">Filter By Date</Label>
+
+									<div class="d-flex gap-1 col-lg-6 col-12">
+										<input
+											type="date"
+											v-model="startDate"
+											class="form-control"
+										/>
+
+										<input type="date" v-model="endDate" class="form-control" />
+									</div>
+								</div>
+								<div class="table-responsive">
+									<table v-if="role === `user`" class="table table-striped">
+										<thead>
+											<tr>
+												<th scope="col">#</th>
+												<th scope="col">Team Name</th>
+												<th scope="col">Nilai</th>
+												<th scope="col">Waktu</th>
+												<th scope="col">Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											<tr
+												class="table datatable"
+												v-for="(team, index) in teams"
+												:key="index"
+											>
+												<th scope="row">{{ index + 1 }}</th>
+												<td class="fw-normal" style="text-transform: uppercase">
+													{{ team.teamName }}
+												</td>
+												<td class="fw-bold">{{ team.totalNilai }}</td>
+												<td>{{ team.timeStamp }}</td>
+												<td class="d-flex gap-1 flex-wrap">
+													<router-link
+														:to="
+															'/detail/' + team.teamName + '/' + team.timeStamp
+														"
+														class="btn btn-primary"
+													>
+														View
+													</router-link>
+													<button
+														type="button"
+														@click="
+															deleteNilai(user, team.teamName, team.timeStamp)
+														"
+														class="btn btn-danger btn-sm btn-responsive d-none"
+													>
+														Del
+													</button>
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
 								<center v-if="teams.length === 0" class="fs-3 fw-bold">
 									Tidak data 🧐
 								</center>
@@ -103,6 +121,8 @@
 			return {
 				user: null,
 				role: null,
+				startDate: null,
+				endDate: null,
 				nilaiList: [],
 			};
 		},
@@ -168,7 +188,20 @@
 						groupedData[key].totalNilai.toFixed(2)
 					);
 				}
-				return Object.values(groupedData);
+				const sortedData = Object.values(groupedData).sort((a, b) => {
+					return new Date(b.timeStamp) - new Date(a.timeStamp);
+				});
+
+				if (this.startDate && this.endDate) {
+					const start = new Date(this.startDate);
+					const end = new Date(this.endDate);
+					return sortedData.filter((item) => {
+						const itemDate = new Date(item.timeStamp);
+						return itemDate >= start && itemDate <= end;
+					});
+				} else {
+					return sortedData;
+				}
 			},
 		},
 

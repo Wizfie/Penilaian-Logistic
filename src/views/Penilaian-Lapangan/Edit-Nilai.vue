@@ -7,16 +7,24 @@
 					<div class="col-lg-12">
 						<div class="card">
 							<div class="card-body">
-								<h5 class="card-title">Detail Nilai</h5>
+								<div class="d-flex justify-content-between p-2">
+									<h5 class="card-title fw-bold">Detail Nilai</h5>
+									<button
+										@click="this.$router.back()"
+										class="btn btn-secondary m-2"
+									>
+										Back
+									</button>
+								</div>
 
 								<!-- Form  -->
-								<form @submit.prevent="updateNilai" class="table-responsive">
+								<div class="table-responsive">
 									<table class="table-bordered align-content-center">
 										<thead>
 											<tr>
 												<th class="text-center" scope="col">#</th>
 												<th class="text-center" scope="col">Question</th>
-												<th class="text-center p-4" scope="col">Nilai</th>
+												<th class="text-center p-3" scope="col">Nilai</th>
 												<!-- <th class="text-center" scope="col">Max</th> -->
 											</tr>
 										</thead>
@@ -29,21 +37,22 @@
 												)"
 												:key="index"
 											>
-												<th class="text-center" scope="row">
+												<th class="text-center p-2" scope="row">
 													{{ index + 1 }}
 												</th>
-												<td class="text-wrap fw-semibold p-1">
+												<td class="text-wrap fw-semibold p-2">
 													{{ item.questionText }}.
 													<br />
 													<small> Max Point = {{ item.maxValue }} </small>
 												</td>
-												<td>
+												<td class="p-2">
 													<input
 														:id="'nilaiInput_' + item.nilaiId"
 														type="text"
-														class="form-control text-center w-100 fw-bold p-4"
+														class="form-control text-center w-100 fw-bold p-2"
 														v-model="item.nilai"
 														@input="TotalNilai"
+														:disabled="!updateMode"
 														required
 													/>
 												</td>
@@ -60,15 +69,35 @@
 											</tr>
 										</tbody>
 									</table>
-									<div class="d-flex my-2 gap-3">
-										<!-- <button type="button" class="btn btn-danger w-100">
+								</div>
+								<div class="d-flex my-2 gap-3 w-100">
+									<!-- <button type="button" class="btn btn-danger w-100">
 											Cancel
 										</button> -->
-										<button type="submit" class="btn btn-primary w-100">
-											Update
-										</button>
-									</div>
-								</form>
+									<button
+										v-if="!updateMode"
+										@click="enableUpdate"
+										type="button"
+										class="btn btn-primary w-100"
+									>
+										Update
+									</button>
+									<button
+										v-else="cancelUpdate"
+										@click="cancelUpdate"
+										type="button"
+										class="btn btn-danger w-100"
+									>
+										Cancel
+									</button>
+									<button
+										v-if="updateMode"
+										@click="updateNilai"
+										class="btn btn-primary w-100"
+									>
+										Submit
+									</button>
+								</div>
 								<!-- End Form -->
 							</div>
 						</div>
@@ -93,10 +122,17 @@
 				user: null,
 				nilaiList: [],
 				totalNilai: null,
+				updateMode: false,
 			};
 		},
 
 		methods: {
+			enableUpdate() {
+				this.updateMode = true;
+			},
+			cancelUpdate() {
+				this.updateMode = false;
+			},
 			getNilaiByUser() {
 				try {
 					this.$axios
@@ -155,7 +191,8 @@
 						console.log(response.data);
 						console.log("Data updated successfully");
 						alert("Data updated successfully");
-						this.$router.back();
+						// this.$router.back();
+						this.updateMode = false;
 					})
 					.catch((error) => {
 						console.error("Error updating data:", error);

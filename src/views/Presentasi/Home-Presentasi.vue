@@ -119,7 +119,6 @@
 		components: {
 			Header,
 		},
-
 		data() {
 			return {
 				btnHistory: "History",
