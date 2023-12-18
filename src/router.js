@@ -6,7 +6,9 @@ import penilaianLapangan from "./views/Penilaian-Lapangan/Penilaian-Lapangan.vue
 import historyLapangan from "./views/Penilaian-Lapangan/History-Lapangan.vue";
 import detailNilai from "./views/Penilaian-Lapangan/Edit-Nilai.vue";
 import penilaianYelyel from "./views/Penilaian-Yelyel/Home-Yelyel.vue";
+import historyYelyel from "./views/Penilaian-Yelyel/History-Yelyel.vue";
 import homePresentasi from "./views/Presentasi/Home-Presentasi.vue";
+import historyPresentasi from "./views/Presentasi/History-Presentasi.vue";
 import detailPresentasi from "./views/Presentasi/Details-Presentasi.vue";
 import notFound from "./components/NotFound.vue";
 
@@ -44,6 +46,11 @@ const routes = [
 		beforeEnter: checkAuthorization,
 	},
 	{
+		path: "/history-yelyel",
+		component: historyYelyel,
+		beforeEnter: checkAuthorization,
+	},
+	{
 		path: "/detail/:teamName/:timestamp",
 		component: detailNilai,
 		beforeEnter: checkAuthorization,
@@ -62,6 +69,11 @@ const routes = [
 	{
 		path: "/presentasi",
 		component: homePresentasi,
+		beforeEnter: checkAuthorization,
+	},
+	{
+		path: "/history-presentasi",
+		component: historyPresentasi,
 		beforeEnter: checkAuthorization,
 	},
 	{

@@ -10,9 +10,9 @@
 			<div class="card">
 				<div class="card-body d-flex justify-content-between">
 					<h4>Hello, <span>Wiz</span></h4>
-					<div @click="toggleHistory()" class="btn btn-success">
-						{{ btnHistory }}
-					</div>
+					<router-link to="/history-presentasi" class="btn btn-success">
+						History
+					</router-link>
 				</div>
 			</div>
 
@@ -66,7 +66,7 @@
 				</div>
 				<button class="btn btn-primary w-100">Submit</button>
 			</form>
-			<div v-if="showHistory" class="card">
+			<div class="card">
 				<div class="card-header fw-bold">History Presentasi</div>
 				<div class="card-body">
 					<Label class="form-label p-2 fw-semibold">Filter By Date</Label>
@@ -121,8 +121,6 @@
 		},
 		data() {
 			return {
-				btnHistory: "History",
-				showHistory: false,
 				scoreByNip: [],
 				questionData: [],
 				teamList: [],
@@ -152,14 +150,6 @@
 						});
 				} catch (error) {
 					console.log("Fail getByNip " + error);
-				}
-			},
-
-			toggleHistory() {
-				this.showHistory = !this.showHistory;
-				this.btnHistory = this.showHistory ? "Back" : "History";
-				if (this.showHistory) {
-					this.getByNip();
 				}
 			},
 

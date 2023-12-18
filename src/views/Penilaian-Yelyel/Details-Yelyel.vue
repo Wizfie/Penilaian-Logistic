@@ -19,79 +19,19 @@
 							class="btn btn-success"
 							>History</router-link
 						> -->
-						<router-link
-							to="/history-yelyel"
+						<button
 							v-if="tokenUser.role === 'user'"
 							class="btn btn-success w-auto"
+							@click="$router.back()"
 						>
-							History
-						</router-link>
+							Back
+						</button>
 					</div>
 				</div>
 			</div>
 
-			<div v-if="!showTable" class="card">
-				<form @submit.prevent="saveData">
-					<div class="card-header p-4">
-						<h4 class="fw-bold">Penilaian Yel-yel</h4>
-					</div>
-					<div class="input-group mb-3 p-2">
-						<label class="input-group-text" for="teams-select"
-							>Pilih Team</label
-						>
-						<select
-							class="form-select"
-							id="teams-select"
-							required
-							v-model="selectedTeam"
-						>
-							<option selected disabled>List Team</option>
-							<option v-for="teams in teamData" :value="teams.teamName">
-								{{ teams.teamName.toUpperCase() }}
-							</option>
-						</select>
-					</div>
-					<div class="table-responsive p-2">
-						<table class="table table-bordered">
-							<thead>
-								<tr class="text-center">
-									<th>No</th>
-									<th>Question</th>
-									<th>Max</th>
-									<th>Point</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(quest, index) in questionData" :key="index">
-									<td class="text-center">{{ index + 1 }}</td>
-									<td class="text-wrap">{{ quest.subscriteriaName }}</td>
-									<td class="text-center">{{ quest.maxPoint }}</td>
-									<td>
-										<input
-											class="form-control"
-											type="number"
-											v-model="pointData[index]"
-											required
-											@input="updateTotalPoint"
-										/>
-									</td>
-								</tr>
-							</tbody>
-							<tfoot>
-								<tr class="text-center fw-bold">
-									<td colspan="3">Total Point</td>
-									<td>{{ totalPoint }}</td>
-								</tr>
-							</tfoot>
-						</table>
-						<button class="btn btn-primary w-100" @click="submitData">
-							Submit
-						</button>
-					</div>
-				</form>
-			</div>
 			<!-- HIstory Start -->
-			<div v-if="showTable" class="card">
+			<div class="card">
 				<form>
 					<div
 						class="card-header d-flex justify-content-between align-content-center"
@@ -250,7 +190,6 @@
 						subscriteriaName: quest.subscriteriaName,
 						teamName: this.selectedTeam,
 						username: this.tokenUser.user,
-						nip: this.tokenUser.nip,
 						point: this.pointData[index],
 						createdAt: null,
 					}));
@@ -343,7 +282,6 @@
 				console.error("Error retrieving userData from localStorage:", error);
 			}
 
-			// Lakukan pemanggilan ke method untuk mengambil data setelah mendapatkan token user yang sesuai
 			this.getQuestion();
 			this.getTeamsAll();
 			this.getPointByUsername();
