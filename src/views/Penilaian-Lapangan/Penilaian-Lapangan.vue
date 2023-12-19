@@ -142,10 +142,13 @@
 						for (const questionId in this.selectedValues) {
 							if (Object.hasOwnProperty.call(this.selectedValues, questionId)) {
 								const selectedValue = this.selectedValues[questionId];
+								console.log(selectedValue);
 
 								data.push({
 									questionId: questionId,
-									nilai: parseFloat(selectedValue.optionValue),
+									nilai: parseFloat(
+										selectedValue.optionValue.replace(",", ".")
+									),
 									username: this.tokenUser.user,
 									teamName: this.selectedTeam,
 									timestamp: new Date().toISOString().slice(0, 10), // Format tanggal "YYYY-MM-DD"
@@ -153,6 +156,12 @@
 								});
 							}
 						}
+
+						console.log("=========");
+						console.log(
+							"🚀 ~ file: Penilaian-Lapangan.vue:158 ~ savePoint ~ data:",
+							data
+						);
 
 						const response = await this.$axios.post("/save-nilai", data);
 						console.log("Data successfully sent: ", response.data);

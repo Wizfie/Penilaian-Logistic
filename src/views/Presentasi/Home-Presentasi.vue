@@ -16,7 +16,7 @@
 				</div>
 			</div>
 
-			<form v-if="!showHistory" @submit.prevent="sendScore">
+			<form @submit.prevent="sendScore">
 				<div class="input-group mb-3">
 					<label class="input-group-text" for="teams-select">Pilih Team</label>
 					<select
@@ -66,50 +66,6 @@
 				</div>
 				<button class="btn btn-primary w-100">Submit</button>
 			</form>
-			<div class="card">
-				<div class="card-header fw-bold">History Presentasi</div>
-				<div class="card-body">
-					<Label class="form-label p-2 fw-semibold">Filter By Date</Label>
-					<div class="d-flex p-2 gap-2 col-lg-6 col-12">
-						<input type="date" v-model="startDate" class="form-control" />
-						<input type="date" v-model="endDate" class="form-control" />
-					</div>
-				</div>
-				<div class="card-body">
-					<div class="table-responsive">
-						<table class="table table-group-divider">
-							<thead>
-								<tr>
-									<th>No</th>
-									<th>Team</th>
-									<th>Score</th>
-									<th>Created</th>
-									<th>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(item, index) in dataBynip" :key="index" class="">
-									<td>{{ index + 1 }}</td>
-									<td>{{ item.teamName }}</td>
-									<td>{{ item.totalScore }}</td>
-									<td>{{ item.createdAt }}</td>
-									<td>
-										<router-link
-											class="btn btn-secondary"
-											:to="{
-												path: '/presentasi/detail-presentasi',
-												query: { team: item.teamName, date: item.createdAt },
-											}"
-										>
-											Details
-										</router-link>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
 		</main>
 	</div>
 </template>

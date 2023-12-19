@@ -47,7 +47,21 @@
 									{{ team.totalNilai }}
 								</td>
 								<td class="small">{{ team.createdAt }}</td>
-								<td><Button class="btn btn-sm btn-primary">Detail</Button></td>
+								<td>
+									<router-link
+										:to="
+											'/details-yelyel/' +
+											team.nip +
+											'/' +
+											team.teamName +
+											'/' +
+											team.createdAt
+										"
+										class="btn btn-primary"
+									>
+										View
+									</router-link>
+								</td>
 							</tr>
 							<tr class="text-center" v-if="teams.length === 0">
 								<td colspan="4">No data</td>
@@ -105,8 +119,9 @@
 					const key = `${item.teamName}_${item.createAt}`;
 					if (!result[key]) {
 						result[key] = {
+							nip: item.nip,
 							teamName: item.teamName,
-							createdAt: item.createAt,
+							createdAt: item.createdAt,
 							totalNilai: 0,
 						};
 					}

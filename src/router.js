@@ -7,6 +7,7 @@ import historyLapangan from "./views/Penilaian-Lapangan/History-Lapangan.vue";
 import detailNilai from "./views/Penilaian-Lapangan/Edit-Nilai.vue";
 import penilaianYelyel from "./views/Penilaian-Yelyel/Home-Yelyel.vue";
 import historyYelyel from "./views/Penilaian-Yelyel/History-Yelyel.vue";
+import detailsYelyel from "./views/Penilaian-Yelyel/Details-Yelyel.vue";
 import homePresentasi from "./views/Presentasi/Home-Presentasi.vue";
 import historyPresentasi from "./views/Presentasi/History-Presentasi.vue";
 import detailPresentasi from "./views/Presentasi/Details-Presentasi.vue";
@@ -48,6 +49,11 @@ const routes = [
 	{
 		path: "/history-yelyel",
 		component: historyYelyel,
+		beforeEnter: checkAuthorization,
+	},
+	{
+		path: "/details-yelyel/:nip/:teamName/:createdAt",
+		component: detailsYelyel,
 		beforeEnter: checkAuthorization,
 	},
 	{

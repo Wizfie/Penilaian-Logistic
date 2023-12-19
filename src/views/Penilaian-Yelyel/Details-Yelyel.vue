@@ -48,66 +48,48 @@
 							<table class="table table-bordered">
 								<thead>
 									<tr class="fs-5 fw-bold text-center">
-										<th class="text-center p-4">No</th>
-										<th class="text-center p-4">Question</th>
-										<th class="text-center p-4">Max</th>
+										<th class="text-center">No</th>
+										<th col-6 class="text-center">Question</th>
 										<!-- Kolom untuk setiap tim -->
-										<template
-											v-for="(team, teamIndex) in teamData"
-											:key="teamIndex"
-										>
-											<th class="text-center p-4">{{ team.teamName }}</th>
-										</template>
+										<th class="text-center">{{ teamName }}</th>
 									</tr>
 								</thead>
 								<tbody>
-									<template
-										v-for="(question, questionIndex) in questionData"
-										:key="questionIndex"
-									>
-										<tr>
-											<td class="text-center">{{ questionIndex + 1 }}</td>
-											<td class="text-wrap question-cell w-25">
-												{{ question.subscriteriaName }}
-											</td>
-											<td class="text-center">{{ question.maxPoint }}</td>
-
-											<template
-												v-for="(team, teamIndex) in teamData"
-												:key="teamIndex"
+									<tr v-for="(detail, index) in DetailsList" :key="index">
+										<td class="text-center">{{ index + 1 }}</td>
+										<td class="fs-5 text-wrap question-cell">
+											{{ detail.subscriteriaName }}.
+											<br />
+											<small class="fw-semibold"
+												>Max Point : {{ detail.maxPoint }}</small
 											>
-												<td class="text-center">
-													<input
-														type="number"
-														:value="
-															getPointByUsernameAndTeam(
-																question.subscriteriaName,
-																team.teamName
-															)
-														"
-														disabled
-														min="0"
-														class="form-control text-center"
-														:id="'input-' + questionIndex + '-' + teamIndex"
-													/>
-												</td>
-											</template>
-										</tr>
-									</template>
+										</td>
+
+										<td class="text-center">
+											<input
+												type="number"
+												min="0"
+												class="fw-bold form-control text-center"
+												v-model="detail.point"
+											/>
+										</td>
+									</tr>
 								</tbody>
 								<tfoot>
 									<tr class="fs-5 fw-bold text-center">
-										<td colspan="3" class="text-center p-2">Total</td>
+										<td colspan="2" class="text-center p-2">Total</td>
 										<!-- Menghitung total poin untuk setiap tim -->
-										<template v-for="(team, teamIndex) in teamData">
-											<td class="text-center p-2">
-												{{ calculateTotalPoints(team.teamName) }}
-											</td>
-										</template>
+										<td>{{ totalPoints }}</td>
 									</tr>
 								</tfoot>
 							</table>
 						</div>
+						<button
+							class="btn btn-primary w-100"
+							@click.prevent="collectAndSaveChanges"
+						>
+							Save
+						</button>
 					</div>
 				</form>
 			</div>
@@ -124,16 +106,11 @@
 
 		data() {
 			return {
-				btnHistory: "History",
-				username: "",
-				selectedTeam: "",
-				inputValues: [],
-				questionData: [],
-				teamData: [],
-				pointData: [],
-				totalPoint: 0,
-				showTable: false,
-				pointByUser: [],
+				teamName: this.$route.params.teamName,
+				createdAt: this.$route.params.createdAt,
+				updatedDetails: [],
+				totalPoints: 0,
+				DetailsList: [],
 				tokenUser: {
 					nip: null,
 					user: null,
@@ -143,127 +120,66 @@
 		},
 
 		methods: {
-			calculateTotalPoints(teamName) {
-				let total = 0;
-				this.questionData.forEach((question, questionIndex) => {
-					// Menambahkan poin dari tiap tim pada setiap pertanyaan
-					total += parseInt(
-						this.getPointByUsernameAndTeam(question.subscriteriaName, teamName)
-					);
-				});
-				return total;
-			},
-			updateTotalPoint() {
-				this.totalPoint = this.pointData.reduce((acc, currentValue) => {
-					return acc + (parseInt(currentValue) || 0);
-				}, 0);
-			},
-			getPointByUsernameAndTeam(subcriteriaName, teamName) {
-				// Filter respons pointByUser berdasarkan pertanyaan (subcriteriaName) dan nama tim (teamName)
-				const filteredPoint = this.pointByUser.find(
-					(point) =>
-						point.subscriteriaName === subcriteriaName &&
-						point.teamName === teamName
-				);
+			getDetails() {
+				const nip = this.tokenUser.nip;
+				const team = this.teamName;
+				const date = this.createdAt;
 
-				// Jika data ditemukan, kembalikan nilai poin, jika tidak, kembalikan 0 atau nilai default lainnya
-				return filteredPoint ? filteredPoint.point : 0;
-			},
-			getTotalPointByTeam(teamName) {
-				// Filter respons pointByUser berdasarkan nama tim (teamName)
-				const filteredPoints = this.pointByUser.filter(
-					(point) => point.teamName === teamName
-				);
-
-				// Menghitung total nilai berdasarkan nama tim
-				const total = filteredPoints.reduce(
-					(acc, currentPoint) => acc + currentPoint.point,
-					0
-				);
-
-				// Kembalikan nilai total
-				return total;
-			},
-			saveData() {
-				if (confirm("Save Points?")) {
-					const sendData = this.questionData.map((quest, index) => ({
-						subscriteriaName: quest.subscriteriaName,
-						teamName: this.selectedTeam,
-						username: this.tokenUser.user,
-						point: this.pointData[index],
-						createdAt: null,
-					}));
-
-					const invalidIndex = this.questionData.findIndex((quest, index) => {
-						return (
-							this.pointData[index] < 0 ||
-							this.pointData[index] > quest.maxPoint
-						);
-					});
-
-					if (invalidIndex !== -1) {
-						const invalidColumnName =
-							this.questionData[invalidIndex].subscriteriaName;
-						alert(
-							`Pastikan Pointnya tidak melebihi Max Point \nPoint ${invalidColumnName}`
-						);
-						return; // Menghentikan proses penyimpanan jika ada nilai yang tidak valid
-					}
-
+				try {
 					this.$axios
-						.post("/savePoint", sendData)
+						.get(`/details-yelyel/${nip}/${team}/${date}`)
 						.then((response) => {
-							console.log("Data disimpan!", response.data);
-							alert("Points Data Saved");
-
-							this.selectedTeam = "";
-							this.pointData = [];
-							this.totalPoint = 0;
-						})
-						.catch((error) => {
-							console.error("Data gagal disimpan!", error);
-							alert("Fail Save Data Points ");
+							this.DetailsList = response.data;
+							console.log(response.data);
 						});
-				}
-			},
-
-			toggleTable() {
-				this.showTable = !this.showTable;
-
-				this.btnHistory = this.showTable ? "Back" : "History";
-
-				if (this.showTable) {
-					this.getPointByUsername();
-				}
-			},
-			async getQuestion() {
-				try {
-					const response = await this.$axios.get("/question");
-					this.questionData = response.data;
-					console.log(this.questionData);
 				} catch (error) {
-					console.error("Error fetching Question data:", error);
+					console.log(
+						"🚀 ~ file: Details-Yelyel.vue:122 ~ getDetails ~ error:",
+						error
+					);
 				}
+			},
+			collectAndSaveChanges() {
+				// Memeriksa apakah ada input yang kosong atau tidak valid sebelum menyimpan
+				for (const detail of this.DetailsList) {
+					if (
+						detail.point === "" ||
+						detail.point === null ||
+						isNaN(detail.point) ||
+						detail.point > detail.maxPoint
+					) {
+						console.error("Invalid or empty input detected.");
+						alert(
+							`Harap isi poin dengan benar \nPada Question ${detail.subscriteriaName}.`
+						);
+						return; // Menghentikan proses penyimpanan jika ada input tidak valid
+					}
+					detail.isModified = true;
+				}
+
+				// Jika semua input valid, simpan perubahan ke backend
+				this.saveChangesToBackend();
 			},
 
-			async getTeamsAll() {
+			async saveChangesToBackend() {
 				try {
-					const response = await this.$axios.get("/teams/all");
-					this.teamData = response.data;
+					// Send the updated data to the backend
+					await this.$axios.post("/savePoint", this.updatedDetails);
+					console.log("All changes saved successfully!");
+					alert("Saved");
+					this.$router.back();
 				} catch (error) {
-					console.error("Error fetching Teams data:", error);
+					console.error("Error saving changes:", error);
+					alert("Fail");
 				}
 			},
-			async getPointByUsername() {
-				try {
-					const username = this.tokenUser.user;
-					const response = await this.$axios.get(`/point?username=${username}`);
-					this.pointByUser = response.data;
-					console.log(this.pointByUser);
-				} catch (error) {
-					console.error("Error fetching point data by username:", error);
-					// Tambahkan pesan kesalahan yang lebih spesifik atau tambahkan penanganan kesalahan yang lebih detail di sini
-				}
+		},
+
+		computed: {
+			totalPoints() {
+				return this.DetailsList.reduce((total, detail) => {
+					return total + (detail.point ? parseInt(detail.point) : 0);
+				}, 0);
 			},
 		},
 
@@ -275,16 +191,14 @@
 					this.tokenUser.role = userData.role;
 					this.tokenUser.nip = userData.nip;
 					console.log(this.tokenUser.user); // pastikan nilai ini tidak null
+
+					this.getDetails();
 				} else {
 					console.error("userData is null or undefined");
 				}
 			} catch (error) {
 				console.error("Error retrieving userData from localStorage:", error);
 			}
-
-			this.getQuestion();
-			this.getTeamsAll();
-			this.getPointByUsername();
 		},
 	};
 </script>

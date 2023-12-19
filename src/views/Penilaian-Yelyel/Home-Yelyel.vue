@@ -252,6 +252,7 @@
 						username: this.tokenUser.user,
 						nip: this.tokenUser.nip,
 						point: this.pointData[index],
+						maxPoint: quest.maxPoint,
 						createdAt: null,
 					}));
 
@@ -315,17 +316,17 @@
 					console.error("Error fetching Teams data:", error);
 				}
 			},
-			async getPointByUsername() {
-				try {
-					const username = this.tokenUser.user;
-					const response = await this.$axios.get(`/point?username=${username}`);
-					this.pointByUser = response.data;
-					console.log(this.pointByUser);
-				} catch (error) {
-					console.error("Error fetching point data by username:", error);
-					// Tambahkan pesan kesalahan yang lebih spesifik atau tambahkan penanganan kesalahan yang lebih detail di sini
-				}
-			},
+			// async getPointByUsername() {
+			// 	try {
+			// 		const username = this.tokenUser.user;
+			// 		const response = await this.$axios.get(`/point?username=${username}`);
+			// 		this.pointByUser = response.data;
+			// 		console.log(this.pointByUser);
+			// 	} catch (error) {
+			// 		console.error("Error fetching point data by username:", error);
+			// 		// Tambahkan pesan kesalahan yang lebih spesifik atau tambahkan penanganan kesalahan yang lebih detail di sini
+			// 	}
+			// },
 		},
 
 		created() {
@@ -346,7 +347,7 @@
 			// Lakukan pemanggilan ke method untuk mengambil data setelah mendapatkan token user yang sesuai
 			this.getQuestion();
 			this.getTeamsAll();
-			this.getPointByUsername();
+			// this.getPointByUsername();
 		},
 	};
 </script>

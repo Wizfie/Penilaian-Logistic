@@ -92,7 +92,7 @@
 									</button>
 									<button
 										v-if="updateMode"
-										@click="updateNilai"
+										@click.prevent="updateNilai"
 										class="btn btn-primary w-100"
 									>
 										Submit
@@ -163,11 +163,12 @@
 					const nilai = parseFloat(item.nilai || 0); // Mengganti koma dengan titik dan mengonversi ke float
 					const maxValue = parseFloat(item.maxValue);
 
-					// console.log("Question:", item.questionText);
-					// console.log("Nilai:", nilai);
-					// console.log("Max Value:", maxValue);
-
-					if (isNaN(nilai) || nilai < 0 || nilai > maxValue) {
+					if (
+						isNaN(nilai) ||
+						isNaN(maxValue) ||
+						nilai < 0 ||
+						nilai > maxValue
+					) {
 						alert(
 							"Nilai tidak valid untuk pertanyaan nomor: " +
 								item.questionId +
@@ -191,8 +192,8 @@
 						console.log(response.data);
 						console.log("Data updated successfully");
 						alert("Data updated successfully");
-						// this.$router.back();
 						this.updateMode = false;
+						this.$router.back();
 					})
 					.catch((error) => {
 						console.error("Error updating data:", error);
