@@ -141,6 +141,7 @@
 			},
 			collectAndSaveChanges() {
 				// Memeriksa apakah ada input yang kosong atau tidak valid sebelum menyimpan
+				this.updatedDetails = [];
 				for (const detail of this.DetailsList) {
 					if (
 						detail.point === "" ||
@@ -154,7 +155,16 @@
 						);
 						return; // Menghentikan proses penyimpanan jika ada input tidak valid
 					}
+
 					detail.isModified = true;
+					this.updatedDetails.push({
+						subscriteriaName: detail.subscriteriaName,
+						point: detail.point,
+						nip: detail.nip,
+						teamName: detail.teamName,
+						username: detail.username,
+						createdAt: detail.createdAt,
+					});
 				}
 
 				// Jika semua input valid, simpan perubahan ke backend
