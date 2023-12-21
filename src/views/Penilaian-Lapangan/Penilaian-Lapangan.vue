@@ -151,7 +151,8 @@
 									),
 									username: this.tokenUser.user,
 									teamName: this.selectedTeam,
-									timestamp: new Date().toISOString().slice(0, 10), // Format tanggal "YYYY-MM-DD"
+									// timestamp: new Date().toISOString().slice(0, 10), // Format tanggal "YYYY-MM-DD"
+									timestamp: null, // Format tanggal "YYYY-MM-DD"
 									nip: this.tokenUser.nip,
 								});
 							}
