@@ -98,7 +98,7 @@
 		methods: {
 			getByNip() {
 				try {
-					this.$axios
+					this.axios
 						.get(`/score/byNip/${this.tokenUser.nip}`)
 						.then((response) => {
 							console.log(response.data);
@@ -139,7 +139,7 @@
 				}
 
 				try {
-					this.$axios.post("/score/save", evaluationData).then((response) => {
+					this.axios.post("/score/save", evaluationData).then((response) => {
 						console.log(response.data);
 						this.getByNip();
 						alert("Score saved");
@@ -159,7 +159,7 @@
 
 			getTeams() {
 				try {
-					this.$axios.get("/teams-all").then((response) => {
+					this.axios.get("/teams-all").then((response) => {
 						console.log(response.data);
 						this.teamList = response.data;
 					});
@@ -170,7 +170,7 @@
 
 			getQuestion() {
 				try {
-					this.$axios.get("/items-presentasi").then((response) => {
+					this.axios.get("/items-presentasi").then((response) => {
 						// console.log(response.data);
 						this.questionData = response.data;
 						// console.log(this.questionData);

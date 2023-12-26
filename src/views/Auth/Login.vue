@@ -108,7 +108,7 @@
 		},
 		methods: {
 			LoginRequest() {
-				this.$axios
+				this.axios
 					.post("/auth/login", this.LoginData)
 					.then((response) => {
 						console.log(response.data);

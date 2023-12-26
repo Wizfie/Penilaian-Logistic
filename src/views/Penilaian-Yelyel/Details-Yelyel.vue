@@ -126,7 +126,7 @@
 				const date = this.createdAt;
 
 				try {
-					this.$axios
+					this.axios
 						.get(`/details-yelyel/${nip}/${team}/${date}`)
 						.then((response) => {
 							this.DetailsList = response.data;
@@ -174,7 +174,7 @@
 			async saveChangesToBackend() {
 				try {
 					// Send the updated data to the backend
-					await this.$axios.post("/savePoint", this.updatedDetails);
+					await this.axios.post("/savePoint", this.updatedDetails);
 					console.log("All changes saved successfully!");
 					alert("Saved");
 					this.$router.back();

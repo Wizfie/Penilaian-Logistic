@@ -135,7 +135,7 @@
 			},
 			getNilaiByUser() {
 				try {
-					this.$axios
+					this.axios
 						.get("/nilai-list?username=" + this.user)
 						.then((response) => {
 							this.nilaiList = response.data;
@@ -186,7 +186,7 @@
 					});
 				}
 
-				this.$axios
+				this.axios
 					.put("/update-nilai", updatedValues)
 					.then((response) => {
 						console.log(response.data);
@@ -225,7 +225,7 @@
 			},
 			getAllChoice() {
 				try {
-					this.$axios.get("/choiceAll").then((response) => {
+					this.axios.get("/choiceAll").then((response) => {
 						this.choiceList = response.data;
 						//   console.log(this.choiceList);
 					});

@@ -113,7 +113,7 @@
 					}
 
 					// Kirim perubahan ke backend
-					this.$axios
+					this.axios
 						.post("/score/save", this.filteredDetailScore)
 						.then((response) => {
 							console.log("Changes submitted successfully:", response.data);
@@ -144,7 +144,7 @@
 			},
 			getByNip() {
 				try {
-					this.$axios
+					this.axios
 						.get(`/score/byNip/${this.tokenUser.nip}`)
 						.then((response) => {
 							console.log(response.data); // Data yang diambil dari API

@@ -17,9 +17,10 @@
 				</div>
 
 				<hr style="height: 2px" />
+				<label class="form-label fw-semibold" for="">Export Excel</label>
 			</div>
 
-			<label class="form-label" for="">Export Excel</label>
+			<label for="user-nip">Select User:</label>
 			<div class="d-flex gap-1 col-lg-6 col-12">
 				<select
 					class="form-control"
@@ -29,7 +30,6 @@
 					id="user-nip"
 					required
 				>
-					<option value="" disabled>Select User</option>
 					<option
 						v-for="(user, index) in usersWithNIP"
 						:key="index"
@@ -140,9 +140,42 @@
 				const workbook = new ExcelJS.Workbook();
 				const worksheet = workbook.addWorksheet("Exported Data");
 
+				const user = this.usersWithNIP.find(
+					(user) => user.nip === selectedUserNIP
+				);
+				const exportedAt = new Date().toLocaleString();
+
+				// Membuat informasi yang diminta
+				const userInfo = [
+					[`Nama : ${user.username}`],
+					[`Nip : ${selectedUserNIP}`],
+					[`Tanggal Penilaian ${exportDate.toLocaleString()}`],
+					[`Tanggal Cetak ${exportedAt}`],
+				];
+
+				// Menambahkan informasi di atas tabel pada baris pertama
+				userInfo.forEach((info) => {
+					const row = worksheet.addRow(info);
+					row.font = { bold: true }; // Membuat teks tebal untuk informasi pengguna
+				});
+
+				// Membuat spasi sebelum data tabel
+				worksheet.addRow([]); // Baris kosong untuk pemisah
+
 				// Membuat header
 				const headerRow = ["No", "Question", ...uniqueTeams];
-				worksheet.addRow(headerRow);
+				const header = worksheet.addRow(headerRow);
+
+				header.eachCell((cell, colNumber) => {
+					cell.style = {
+						alignment: { horizontal: "center" },
+						font: { bold: true },
+					};
+					worksheet.getColumn(colNumber).width = Math.max(
+						10,
+						cell.value.toString().length + 2
+					);
+				});
 
 				// Menuliskan data ke dalam file Excel
 				let rowIndex = 2;
@@ -173,7 +206,6 @@
 					});
 
 					teamScoresArray.push(totalNilaiPerQuestion);
-
 					worksheet.addRow(rowData);
 					rowIndex++;
 				});
@@ -189,15 +221,15 @@
 					});
 					totalNilaiRow.push(totalNilai);
 				});
-				worksheet.addRow(totalNilaiRow);
-
+				const grandTotal = worksheet.addRow(totalNilaiRow);
+				grandTotal.font = { bold: true };
 				// Menyimpan file Excel
 				const buffer = await workbook.xlsx.writeBuffer();
 				const blob = new Blob([buffer], {
 					type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 				});
 
-				const filename = "exported_data.xlsx";
+				const filename = `${user.username}-${user.nip}-Penilaian-Lapangan.xlsx`;
 				if (window.navigator.msSaveOrOpenBlob) {
 					window.navigator.msSaveOrOpenBlob(blob, filename);
 				} else {
@@ -214,7 +246,7 @@
 
 			async getAllData() {
 				try {
-					const response = await this.$axios.get("/nilai-lapangan");
+					const response = await this.axios.get("/nilai-lapangan");
 					this.usersWithNIP = response.data.reduce((acc, item) => {
 						const existingUser = acc.find(
 							(user) => user.username === item.username && user.nip === item.nip

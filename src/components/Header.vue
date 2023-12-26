@@ -166,6 +166,11 @@
 						</router-link>
 					</li>
 					<li v-if="role === `admin`">
+						<router-link to="/history-presentasi-admin">
+							<i class="bi bi-circle-fill"></i><span>History Presentasi</span>
+						</router-link>
+					</li>
+					<li v-if="role === `admin`">
 						<router-link to="/history-yelyel-admin">
 							<i class="bi bi-circle-fill"></i><span>History Yel-Yel</span>
 						</router-link>

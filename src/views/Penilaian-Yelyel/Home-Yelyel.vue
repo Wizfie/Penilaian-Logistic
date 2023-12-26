@@ -272,7 +272,7 @@
 						return; // Menghentikan proses penyimpanan jika ada nilai yang tidak valid
 					}
 
-					this.$axios
+					this.axios
 						.post("/savePoint", sendData)
 						.then((response) => {
 							console.log("Data disimpan!", response.data);
@@ -300,7 +300,7 @@
 			},
 			async getQuestion() {
 				try {
-					const response = await this.$axios.get("/question");
+					const response = await this.axios.get("/question");
 					this.questionData = response.data;
 					console.log(this.questionData);
 				} catch (error) {
@@ -310,7 +310,7 @@
 
 			async getTeamsAll() {
 				try {
-					const response = await this.$axios.get("/teams/all");
+					const response = await this.axios.get("/teams/all");
 					this.teamData = response.data;
 				} catch (error) {
 					console.error("Error fetching Teams data:", error);
@@ -319,7 +319,7 @@
 			// async getPointByUsername() {
 			// 	try {
 			// 		const username = this.tokenUser.user;
-			// 		const response = await this.$axios.get(`/point?username=${username}`);
+			// 		const response = await this.axios.get(`/point?username=${username}`);
 			// 		this.pointByUser = response.data;
 			// 		console.log(this.pointByUser);
 			// 	} catch (error) {

@@ -16,6 +16,7 @@ import notFound from "./components/NotFound.vue";
 // Admin
 import adminLapangan from "./views/Admin/History-Lapangan-admin.vue";
 import adminYelyel from "./views/Admin/History-Yelyel-admin.vue";
+import adminPresentasi from "./views/Admin/History-Presentasi-admin.vue";
 // admin
 const routes = [
 	{
@@ -64,6 +65,11 @@ const routes = [
 	{
 		path: "/history-lapangan-admin",
 		component: adminLapangan,
+		beforeEnter: checkAuthorization,
+	},
+	{
+		path: "/history-presentasi-admin",
+		component: adminPresentasi,
 		beforeEnter: checkAuthorization,
 	},
 	{

@@ -4,7 +4,7 @@
 
 		<main id="main" class="main">
 			<div class="pagetitle">
-				<h1 class="my-4 fs-1">Penilaian Yel-yel</h1>
+				<h1 class="my-4 fs-1">Penilaian Presentasi</h1>
 			</div>
 			<div class="card">
 				<div class="card-header">
@@ -166,7 +166,7 @@
 		methods: {
 			async search() {
 				try {
-					const response = await this.axios.get("/searchYelyel", {
+					const response = await this.axios.get("/score/searchPresentasi", {
 						params: {
 							keyword: this.searchKeyword,
 							startDate: this.startDate,
@@ -185,7 +185,7 @@
 				try {
 					if (this.searchResults.number < this.searchResults.totalPages - 1) {
 						const nextPage = this.searchResults.number + 1;
-						const response = await this.axios.get("/searchYelyel", {
+						const response = await this.axios.get("/score/searchPresentasi", {
 							params: {
 								keyword: this.searchKeyword,
 								startDate: this.startDate,
@@ -205,7 +205,7 @@
 				try {
 					if (this.searchResults.number > 0) {
 						const prevPage = this.searchResults.number - 1;
-						const response = await this.axios.get("/searchYelyel", {
+						const response = await this.axios.get("/score/searchPresentasi", {
 							params: {
 								keyword: this.searchKeyword,
 								startDate: this.startDate,
@@ -245,7 +245,7 @@
 				const penilai = `${username} / ${nip}`;
 
 				this.axios
-					.get("/export-yelyel", {
+					.get("/score/export", {
 						params: {
 							nip: nip,
 							createdAt: createdAt,

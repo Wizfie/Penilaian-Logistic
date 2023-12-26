@@ -164,7 +164,7 @@
 							data
 						);
 
-						const response = await this.$axios.post("/save-nilai", data);
+						const response = await this.axios.post("/save-nilai", data);
 						console.log("Data successfully sent: ", response.data);
 						alert("saved data");
 
@@ -178,7 +178,7 @@
 			},
 			getQuestion() {
 				try {
-					this.$axios.get("/kriteria/all").then((response) => {
+					this.axios.get("/kriteria/all").then((response) => {
 						this.questions = response.data;
 						console.log(response.data);
 					});
@@ -188,7 +188,7 @@
 			},
 			getAllTeam() {
 				try {
-					this.$axios.get("/teams-all").then((response) => {
+					this.axios.get("/teams-all").then((response) => {
 						this.teamList = response.data;
 						console.log(this.teamList);
 					});

@@ -96,7 +96,7 @@
 			getPointByNip() {
 				try {
 					const nip = this.tokenUser.nip;
-					this.$axios.get(`/point?nip=` + nip).then((response) => {
+					this.axios.get(`/point?nip=` + nip).then((response) => {
 						this.pointList = response.data;
 						console.log(response.data);
 					});

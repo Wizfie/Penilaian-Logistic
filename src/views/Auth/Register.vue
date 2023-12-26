@@ -130,7 +130,7 @@
 		methods: {
 			RegisterRequest() {
 				try {
-					this.$axios
+					this.axios
 						.post("/users", this.RegisterData)
 						.then((response) => {
 							console.log(response);

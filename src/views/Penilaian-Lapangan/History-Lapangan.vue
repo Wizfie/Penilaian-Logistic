@@ -134,7 +134,7 @@
 
 			getNilaiByUser() {
 				try {
-					this.$axios
+					this.axios
 						.get("/nilai-list?username=" + this.user)
 						.then((response) => {
 							this.nilaiList = response.data;
@@ -146,7 +146,7 @@
 			async deleteNilai(username, teamName, timestamp) {
 				if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
 					try {
-						const response = await this.$axios.delete(
+						const response = await this.axios.delete(
 							`/${username}/${teamName}/${timestamp}`
 						);
 						if (response.status === 200) {
