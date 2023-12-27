@@ -62,7 +62,7 @@
 					v-if="isEditMode"
 					@click="submitChanges"
 				>
-					Submit
+					Save
 				</button>
 			</div>
 		</div>

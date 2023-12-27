@@ -50,6 +50,9 @@
 										/>
 
 										<input type="date" v-model="endDate" class="form-control" />
+										<button @click.prevent="btnReset()" class="btn btn-warning">
+											<i class="bi bi-arrow-clockwise"></i>
+										</button>
 									</div>
 								</div>
 								<div class="table-responsive">
@@ -127,6 +130,10 @@
 			};
 		},
 		methods: {
+			btnReset() {
+				(this.startDate = ""), (this.endDate = "");
+			},
+
 			signOut() {
 				localStorage.clear("userData");
 				this.$router.push("/");

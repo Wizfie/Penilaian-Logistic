@@ -263,7 +263,7 @@
 						link.href = url;
 						link.setAttribute(
 							"download",
-							`${username}-${nip}-score-Presentasi-${createdAt}.xlsx`
+							`${username}-${nip}-${createdAt}-score-Yelyel.xlsx`
 						);
 
 						document.body.appendChild(link);

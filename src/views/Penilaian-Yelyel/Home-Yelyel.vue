@@ -159,7 +159,7 @@
 									<tr class="fs-5 fw-bold text-center">
 										<td colspan="3" class="text-center p-2">Total</td>
 										<!-- Menghitung total poin untuk setiap tim -->
-										<template v-for="(team, teamIndex) in teamData">
+										<template v-for="team in teamData">
 											<td class="text-center p-2">
 												{{ calculateTotalPoints(team.teamName) }}
 											</td>
@@ -253,7 +253,8 @@
 						nip: this.tokenUser.nip,
 						point: this.pointData[index],
 						maxPoint: quest.maxPoint,
-						createdAt: null,
+						createdAt: new Date().toISOString().slice(0, 10), // Format tanggal "YYYY-MM-DD"
+						// createdAt: "2023-12-28",
 					}));
 
 					const invalidIndex = this.questionData.findIndex((quest, index) => {
@@ -281,6 +282,8 @@
 							this.selectedTeam = "";
 							this.pointData = [];
 							this.totalPoint = 0;
+
+							scrollTo(0, 0);
 						})
 						.catch((error) => {
 							console.error("Data gagal disimpan!", error);
@@ -289,15 +292,15 @@
 				}
 			},
 
-			toggleTable() {
-				this.showTable = !this.showTable;
+			// toggleTable() {
+			// 	this.showTable = !this.showTable;
 
-				this.btnHistory = this.showTable ? "Back" : "History";
+			// 	this.btnHistory = this.showTable ? "Back" : "History";
 
-				if (this.showTable) {
-					this.getPointByUsername();
-				}
-			},
+			// 	if (this.showTable) {
+			// 		this.getPointByUsername();
+			// 	}
+			// },
 			async getQuestion() {
 				try {
 					const response = await this.axios.get("/question");
@@ -316,17 +319,6 @@
 					console.error("Error fetching Teams data:", error);
 				}
 			},
-			// async getPointByUsername() {
-			// 	try {
-			// 		const username = this.tokenUser.user;
-			// 		const response = await this.axios.get(`/point?username=${username}`);
-			// 		this.pointByUser = response.data;
-			// 		console.log(this.pointByUser);
-			// 	} catch (error) {
-			// 		console.error("Error fetching point data by username:", error);
-			// 		// Tambahkan pesan kesalahan yang lebih spesifik atau tambahkan penanganan kesalahan yang lebih detail di sini
-			// 	}
-			// },
 		},
 
 		created() {
@@ -344,7 +336,6 @@
 				console.error("Error retrieving userData from localStorage:", error);
 			}
 
-			// Lakukan pemanggilan ke method untuk mengambil data setelah mendapatkan token user yang sesuai
 			this.getQuestion();
 			this.getTeamsAll();
 			// this.getPointByUsername();

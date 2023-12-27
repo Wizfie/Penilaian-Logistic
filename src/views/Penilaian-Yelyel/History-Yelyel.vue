@@ -21,7 +21,7 @@
 							<input type="date" v-model="startDate" class="form-control" />
 
 							<input type="date" v-model="endDate" class="form-control" />
-							<button class="btn btn-warning d-none">
+							<button @click.prevent="btnReset()" class="btn btn-warning">
 								<i class="bi bi-arrow-clockwise"></i>
 							</button>
 						</div>
@@ -43,20 +43,11 @@
 							<tr v-for="(team, index) in teams" :key="index">
 								<td>{{ index + 1 }}</td>
 								<td>{{ team.teamName }}</td>
-								<td class="fw-bold">
-									{{ team.totalNilai }}
-								</td>
-								<td class="small">{{ team.createdAt }}</td>
+								<td class="fw-bold">{{ team.totalNilai }}</td>
+								<td>{{ team.createdAt }}</td>
 								<td>
 									<router-link
-										:to="
-											'/details-yelyel/' +
-											team.nip +
-											'/' +
-											team.teamName +
-											'/' +
-											team.createdAt
-										"
+										:to="`/details-yelyel/${team.nip}/${team.teamName}/${team.createdAt}`"
 										class="btn btn-primary"
 									>
 										View
@@ -93,6 +84,9 @@
 			};
 		},
 		methods: {
+			btnReset() {
+				(this.startDate = ""), (this.endDate = "");
+			},
 			getPointByNip() {
 				try {
 					const nip = this.tokenUser.nip;
@@ -107,47 +101,43 @@
 					);
 				}
 			},
-
-			// calculateTotalScore(teamName) {
-			// 	const team = this.teams.find((team) => team.teamName === teamName);
-			// 	return team ? team.points : 0;
-			// },
 		},
 		computed: {
 			teams() {
-				const groupedData = this.pointList.reduce((result, item) => {
-					const key = `${item.teamName}_${item.createAt}`;
+				const filteredData = this.pointList.filter((item) => {
+					if (this.startDate && this.endDate) {
+						const start = new Date(this.startDate);
+						const end = new Date(this.endDate);
+						const itemDate = new Date(item.createdAt);
+						return itemDate >= start && itemDate <= end;
+					}
+					return true; // Return true by default if no date filters applied
+				});
+
+				const groupedData = filteredData.reduce((result, item) => {
+					const key = `${item.teamName}_${item.createdAt}`;
 					if (!result[key]) {
 						result[key] = {
 							nip: item.nip,
 							teamName: item.teamName,
 							createdAt: item.createdAt,
 							totalNilai: 0,
+							entries: [],
 						};
 					}
+					result[key].entries.push({
+						nip: item.nip,
+						point: parseFloat(item.point.toFixed(2)),
+					});
 					result[key].totalNilai += item.point;
 					return result;
 				}, {});
 
-				for (const key in groupedData) {
-					groupedData[key].totalNilai = parseFloat(
-						groupedData[key].totalNilai.toFixed(2)
-					);
-				}
-				const sortedData = Object.values(groupedData).sort((a, b) => {
+				const teamsArray = Object.values(groupedData).sort((a, b) => {
 					return new Date(b.createdAt) - new Date(a.createdAt);
 				});
 
-				if (this.startDate && this.endDate) {
-					const start = new Date(this.startDate);
-					const end = new Date(this.endDate);
-					return sortedData.filter((item) => {
-						const itemDate = new Date(item.createdAt);
-						return itemDate >= start && itemDate <= end;
-					});
-				} else {
-					return sortedData;
-				}
+				return teamsArray;
 			},
 		},
 

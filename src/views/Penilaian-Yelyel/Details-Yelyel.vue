@@ -67,6 +67,7 @@
 
 										<td class="text-center">
 											<input
+												:disabled="!updateMode"
 												type="number"
 												min="0"
 												class="fw-bold form-control text-center"
@@ -84,12 +85,31 @@
 								</tfoot>
 							</table>
 						</div>
-						<button
-							class="btn btn-primary w-100"
-							@click.prevent="collectAndSaveChanges"
-						>
-							Save
-						</button>
+						<div class="d-flex gap-2">
+							<button
+								v-if="!updateMode"
+								@click="enableUpdate"
+								type="button"
+								class="btn btn-primary w-100"
+							>
+								Update
+							</button>
+							<button
+								v-else="cancelUpdate"
+								@click.prevent="cancelUpdate"
+								type="button"
+								class="btn btn-danger w-100"
+							>
+								Cancel
+							</button>
+							<button
+								v-if="updateMode"
+								@click.prevent="collectAndSaveChanges"
+								class="btn btn-primary w-100"
+							>
+								Save
+							</button>
+						</div>
 					</div>
 				</form>
 			</div>
@@ -111,6 +131,7 @@
 				updatedDetails: [],
 				totalPoints: 0,
 				DetailsList: [],
+				updateMode: false,
 				tokenUser: {
 					nip: null,
 					user: null,
@@ -120,10 +141,18 @@
 		},
 
 		methods: {
+			enableUpdate() {
+				this.updateMode = true;
+			},
+			cancelUpdate() {
+				this.updateMode = false;
+			},
 			getDetails() {
 				const nip = this.tokenUser.nip;
 				const team = this.teamName;
 				const date = this.createdAt;
+
+				console.log(date);
 
 				try {
 					this.axios

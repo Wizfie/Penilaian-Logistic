@@ -23,6 +23,9 @@
 					<div class="d-flex p-2 gap-2 col-lg-6 col-12">
 						<input type="date" v-model="startDate" class="form-control" />
 						<input type="date" v-model="endDate" class="form-control" />
+						<button @click.prevent="btnReset()" class="btn btn-warning">
+							<i class="bi bi-arrow-clockwise"></i>
+						</button>
 					</div>
 				</div>
 				<div class="card-body">
@@ -88,6 +91,9 @@
 		},
 
 		methods: {
+			btnReset() {
+				(this.startDate = ""), (this.endDate = "");
+			},
 			getByNip() {
 				try {
 					this.axios

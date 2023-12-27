@@ -48,7 +48,7 @@
 												<td class="p-2">
 													<input
 														:id="'nilaiInput_' + item.nilaiId"
-														type="text"
+														type="number"
 														class="form-control text-center w-100 fw-bold p-2"
 														v-model="item.nilai"
 														@input="TotalNilai"
