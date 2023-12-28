@@ -57,10 +57,16 @@
 					<div class="export">
 						<label class="mb-2">Select User</label>
 						<div class="d-flex gap-2 col-lg-6 col">
-							<select class="form-control" name="user" id="user">
-								<option value="">wiz</option>
-								<option value="">user2</option>
+							<select
+								class="form-control"
+								name="user"
+								id="user"
+								v-model="selectedUser"
+							>
+								<option value="" disabled selected>User</option>
+								<option v-for="item in teams" :key="item">{{ item }}</option>
 							</select>
+
 							<input class="form-control" type="date" v-model="selectedDate" />
 							<button class="btn btn-success" @click.prevent="exportToExcel">
 								Export
@@ -89,7 +95,7 @@
 						>
 							<td>{{ index + 1 }}</td>
 							<td>{{ result.teamName }}</td>
-							<td>{{ result.score }}</td>
+							<td>{{ result.point }}</td>
 							<td>{{ result.username }} - [ {{ result.nip }} ]</td>
 							<td>{{ result.createdAt }}</td>
 						</tr>
@@ -159,11 +165,34 @@
 					user: null,
 					team: null,
 				},
+				selectedUser: "",
 				selectedDate: "", // Menyimpan tanggal yang dipilih oleh pengguna
 				teamScores: [],
+				teams: [],
 			};
 		},
 		methods: {
+			getUsers() {
+				try {
+					this.axios
+						.get("/point/all")
+						.then((response) => {
+							const uniqueUsers = new Set();
+							response.data.forEach((item) => {
+								const userKey = `${item.username} - [${item.nip}]`;
+								uniqueUsers.add(userKey);
+							});
+							this.teams = Array.from(uniqueUsers);
+							console.log(this.teams);
+						})
+						.catch((error) => {
+							console.error("Error fetching users:", error);
+						});
+				} catch (error) {
+					console.error("Error in getUsers:", error);
+				}
+			},
+
 			async search() {
 				try {
 					const response = await this.axios.get("/searchYelyel", {
@@ -176,6 +205,8 @@
 						},
 					});
 					this.searchResults = response.data;
+
+					console.log(this.searchResults.content);
 				} catch (error) {
 					console.error(error);
 				}
@@ -238,18 +269,16 @@
 			},
 
 			exportToExcel() {
-				const nip = "10"; // Ganti dengan nilai yang sesuai dari aplikasi Vue Anda
-				const createdAt = this.selectedDate; // Ganti dengan nilai yang sesuai dari aplikasi Vue Anda
-				const username = "Wiz"; // Ganti dengan nilai yang sesuai dari aplikasi Vue Anda
-
-				const penilai = `${username} / ${nip}`;
+				const [selectedUsername, selectedNip] = this.selectedUser.split(" - [");
+				const nip = selectedNip.slice(0, -1); // Mengambil nip dari selectedUser
+				const penilai = `${selectedUsername} / ${nip}`; // Menggabungkan username dan nip
 
 				this.axios
 					.get("/export-yelyel", {
 						params: {
 							nip: nip,
-							createdAt: createdAt,
 							penilai: penilai,
+							createdAt: this.selectedDate,
 						},
 						responseType: "blob",
 					})
@@ -263,7 +292,7 @@
 						link.href = url;
 						link.setAttribute(
 							"download",
-							`${username}-${nip}-${createdAt}-score-Yelyel.xlsx`
+							`${selectedUsername}-${nip}-${this.selectedDate}-score-Yelyel.xlsx`
 						);
 
 						document.body.appendChild(link);
@@ -275,12 +304,16 @@
 						if (error.response.status === 404) {
 							alert("Data tidak tersedia");
 						}
-						console.log("Error exporting to Excel:", error);
 					});
 			},
 		},
 
+		updateSelectedUser(event) {
+			this.selectedUser = event.target.value;
+		},
+
 		mounted() {
+			this.getUsers();
 			this.search();
 		},
 		created() {

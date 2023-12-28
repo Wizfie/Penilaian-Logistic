@@ -167,6 +167,8 @@
 						const response = await this.axios.post("/save-nilai", data);
 						console.log("Data successfully sent: ", response.data);
 						alert("saved data");
+						this.selectedValues = [];
+						scrollTo(0, 0);
 
 						// Tambahkan logika atau tindakan setelah pengiriman berhasil jika diperlukan
 					} catch (error) {

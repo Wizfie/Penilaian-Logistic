@@ -43,6 +43,7 @@
 							<tr v-for="(team, index) in teams" :key="index">
 								<td>{{ index + 1 }}</td>
 								<td>{{ team.teamName }}</td>
+								<td>{{ team.totalNilai }}</td>
 								<td class="fw-bold">{{ team.totalNilai }}</td>
 								<td>{{ team.createdAt }}</td>
 								<td>

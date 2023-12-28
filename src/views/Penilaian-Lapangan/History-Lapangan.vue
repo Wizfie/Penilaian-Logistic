@@ -98,12 +98,12 @@
 													</button>
 												</td>
 											</tr>
+											<tr v-if="teams.length === 0" class="text-center">
+												<td colspan="5">No Data</td>
+											</tr>
 										</tbody>
 									</table>
 								</div>
-								<center v-if="teams.length === 0" class="fs-3 fw-bold">
-									Tidak data 🧐
-								</center>
 								<!-- End Table with hoverable rows -->
 							</div>
 						</div>

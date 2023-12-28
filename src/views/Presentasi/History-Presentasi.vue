@@ -58,6 +58,9 @@
 										</router-link>
 									</td>
 								</tr>
+								<tr v-if="dataBynip.length === 0" class="text-center">
+									<td colspan="4">No Data</td>
+								</tr>
 							</tbody>
 						</table>
 					</div>
