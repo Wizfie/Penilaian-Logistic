@@ -57,9 +57,14 @@
 					<div class="export">
 						<label class="mb-2">Select User</label>
 						<div class="d-flex gap-2 col-lg-6 col">
-							<select class="form-control" name="user" id="user">
-								<option value="">wiz</option>
-								<option value="">user2</option>
+							<select
+								class="form-control"
+								name="user"
+								id="user"
+								v-model="selectedUser"
+							>
+								<option value="" disabled selected>Users</option>
+								<option v-for="item in teams" :key="item">{{ item }}</option>
 							</select>
 							<input class="form-control" type="date" v-model="selectedDate" />
 							<button class="btn btn-success" @click.prevent="exportToExcel">
@@ -159,11 +164,31 @@
 					user: null,
 					team: null,
 				},
-				selectedDate: "", // Menyimpan tanggal yang dipilih oleh pengguna
+				selectedDate: "",
+				selectedUser: "",
 				teamScores: [],
+				teams: [],
 			};
 		},
 		methods: {
+			getUsers() {
+				try {
+					this.axios.get("/score/presentasi-all").then((response) => {
+						const uniqueUsers = new Set();
+						response.data.forEach((item) => {
+							const usersKey = `${item.username} - [${item.nip}]`;
+							uniqueUsers.add(usersKey);
+						});
+						this.teams = Array.from(uniqueUsers);
+						console.log(this.teams);
+					});
+				} catch (error) {
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:180 ~ getUsers ~ error:",
+						error
+					);
+				}
+			},
 			async search() {
 				try {
 					const response = await this.axios.get("/score/searchPresentasi", {
@@ -177,7 +202,19 @@
 					});
 					this.searchResults = response.data;
 				} catch (error) {
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:197 ~ search ~ error:",
+						error
+					);
 					console.error(error);
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:199 ~ search ~ error:",
+						error
+					);
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:199 ~ search ~ error:",
+						error
+					);
 				}
 			},
 
@@ -197,7 +234,19 @@
 						this.searchResults = response.data;
 					}
 				} catch (error) {
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:220 ~ nextPage ~ error:",
+						error
+					);
 					console.error(error);
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:222 ~ nextPage ~ error:",
+						error
+					);
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:222 ~ nextPage ~ error:",
+						error
+					);
 				}
 			},
 
@@ -217,7 +266,19 @@
 						this.searchResults = response.data;
 					}
 				} catch (error) {
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:243 ~ prevPage ~ error:",
+						error
+					);
 					console.error(error);
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:245 ~ prevPage ~ error:",
+						error
+					);
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:245 ~ prevPage ~ error:",
+						error
+					);
 				}
 			},
 
@@ -233,22 +294,39 @@
 						number: 0,
 					};
 				} catch (error) {
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:262 ~ refreshData ~ error:",
+						error
+					);
 					console.error(error);
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:264 ~ refreshData ~ error:",
+						error
+					);
+					console.log(
+						"🚀 ~ file: History-Presentasi-admin.vue:264 ~ refreshData ~ error:",
+						error
+					);
 				}
 			},
 
 			exportToExcel() {
-				const nip = "10"; // Ganti dengan nilai yang sesuai dari aplikasi Vue Anda
-				const createdAt = this.selectedDate; // Ganti dengan nilai yang sesuai dari aplikasi Vue Anda
-				const username = "Wiz"; // Ganti dengan nilai yang sesuai dari aplikasi Vue Anda
+				const [selectedUsername, selectedNip] = this.selectedUser.split(" - [");
+				const nip = selectedNip ? selectedNip.slice(0, -1) : null; // Mengambil nip dari selectedUser jika ada
+				const penilai = selectedUsername
+					? `${selectedUsername} / ${nip}`
+					: null; // Menggabungkan username dan nip jika ada
 
-				const penilai = `${username} / ${nip}`;
+				if (!penilai || !this.selectedDate) {
+					alert("Silakan pilih Users dan tanggal sebelum mengekspor data.");
+					return; // Berhenti dari eksekusi jika pengguna dan tanggal belum dipilih
+				}
 
 				this.axios
 					.get("/score/export", {
 						params: {
 							nip: nip,
-							createdAt: createdAt,
+							createdAt: this.selectedDate,
 							penilai: penilai,
 						},
 						responseType: "blob",
@@ -263,7 +341,7 @@
 						link.href = url;
 						link.setAttribute(
 							"download",
-							`${username}-${nip}-${createdAt}-score-Presentasi.xlsx`
+							`${selectedUsername}-${nip}-${this.selectedDate}-score-Presentasi.xlsx`
 						);
 
 						document.body.appendChild(link);
@@ -271,16 +349,37 @@
 						document.body.removeChild(link); // Hapus link setelah di-klik
 					})
 					.catch((error) => {
+						console.log(
+							"🚀 ~ file: History-Presentasi-admin.vue:303 ~ exportToExcel ~ error:",
+							error
+						);
 						console.error("Error exporting to Excel:", error);
+						console.log(
+							"🚀 ~ file: History-Presentasi-admin.vue:305 ~ exportToExcel ~ error:",
+							error
+						);
+						console.log(
+							"🚀 ~ file: History-Presentasi-admin.vue:305 ~ exportToExcel ~ error:",
+							error
+						);
 						if (error.response.status === 404) {
+							console.log(
+								"🚀 ~ file: History-Presentasi-admin.vue:308 ~ exportToExcel ~ error:",
+								error
+							);
 							alert("Data tidak tersedia");
 						}
 						console.log("Error exporting to Excel:", error);
+						console.log(
+							"🚀 ~ file: History-Presentasi-admin.vue:312 ~ exportToExcel ~ error:",
+							error
+						);
 					});
 			},
 		},
 
 		mounted() {
+			this.getUsers();
 			this.search();
 		},
 		created() {

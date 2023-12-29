@@ -63,7 +63,7 @@
 								id="user"
 								v-model="selectedUser"
 							>
-								<option value="" disabled selected>User</option>
+								<option value="" disabled selected>Users</option>
 								<option v-for="item in teams" :key="item">{{ item }}</option>
 							</select>
 
@@ -166,7 +166,7 @@
 					team: null,
 				},
 				selectedUser: "",
-				selectedDate: "", // Menyimpan tanggal yang dipilih oleh pengguna
+				selectedDate: "",
 				teamScores: [],
 				teams: [],
 			};
@@ -270,8 +270,15 @@
 
 			exportToExcel() {
 				const [selectedUsername, selectedNip] = this.selectedUser.split(" - [");
-				const nip = selectedNip.slice(0, -1); // Mengambil nip dari selectedUser
-				const penilai = `${selectedUsername} / ${nip}`; // Menggabungkan username dan nip
+				const nip = selectedNip ? selectedNip.slice(0, -1) : null; // Mengambil nip dari selectedUser jika ada
+				const penilai = selectedUsername
+					? `${selectedUsername} / ${nip}`
+					: null; // Menggabungkan username dan nip jika ada
+
+				if (!penilai || !this.selectedDate) {
+					alert("Silakan pilih Users dan tanggal sebelum mengekspor data.");
+					return; // Berhenti dari eksekusi jika pengguna dan tanggal belum dipilih
+				}
 
 				this.axios
 					.get("/export-yelyel", {
