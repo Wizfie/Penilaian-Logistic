@@ -54,7 +54,7 @@
 												query: { team: item.teamName, date: item.createdAt },
 											}"
 										>
-											Details
+											View
 										</router-link>
 									</td>
 								</tr>

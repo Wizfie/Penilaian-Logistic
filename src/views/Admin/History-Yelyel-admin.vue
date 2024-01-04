@@ -14,14 +14,14 @@
 
 					<hr />
 
-					<form @submit.prevent="search">
+					<form @submit.prevent="search(0)">
 						<div>
 							<label for="keyword">Search:</label>
 							<input
 								class="form-control w-auto"
 								type="text"
 								id="keyword"
-								placeholder="Username / Nip"
+								placeholder="Username / Team Name"
 								v-model="searchKeyword"
 							/>
 						</div>
@@ -89,13 +89,10 @@
 					</thead>
 					<tbody>
 						<!-- Gunakan v-for untuk menampilkan data skor tim -->
-						<tr
-							v-for="(result, index) in searchResults.content"
-							:key="result.id"
-						>
+						<tr v-for="(result, index) in searchResults.content" :key="index">
 							<td>{{ index + 1 }}</td>
 							<td>{{ result.teamName }}</td>
-							<td>{{ result.point }}</td>
+							<td>{{ result.totalPoints }}</td>
 							<td>{{ result.username }} - [ {{ result.nip }} ]</td>
 							<td>{{ result.createdAt }}</td>
 						</tr>
@@ -165,6 +162,7 @@
 					user: null,
 					team: null,
 				},
+				searchQuery: "",
 				selectedUser: "",
 				selectedDate: "",
 				teamScores: [],
@@ -192,64 +190,39 @@
 					console.error("Error in getUsers:", error);
 				}
 			},
-
-			async search() {
+			async search(page = 0) {
 				try {
-					const response = await this.axios.get("/searchYelyel", {
+					const response = await this.axios.get("/pointsYelyel", {
 						params: {
-							keyword: this.searchKeyword,
+							usernameOrTeamName: this.searchKeyword,
 							startDate: this.startDate,
 							endDate: this.endDate,
-							page: 0,
-							size: 20,
+							page: page, // Gunakan nomor halaman yang diteruskan sebagai parameter
+							size: 10,
 						},
 					});
 					this.searchResults = response.data;
-
-					console.log(this.searchResults.content);
+					console.log("Data dari backend:", this.searchResults);
 				} catch (error) {
-					console.error(error);
+					console.error("Error fetching data:", error);
 				}
 			},
 
-			async nextPage() {
-				try {
-					if (this.searchResults.number < this.searchResults.totalPages - 1) {
-						const nextPage = this.searchResults.number + 1;
-						const response = await this.axios.get("/searchYelyel", {
-							params: {
-								keyword: this.searchKeyword,
-								startDate: this.startDate,
-								endDate: this.endDate,
-								page: nextPage,
-								size: 20,
-							},
-						});
-						this.searchResults = response.data;
-					}
-				} catch (error) {
-					console.error(error);
+			// Metode pagination diperbarui
+			prevPage() {
+				if (this.searchResults.number > 0) {
+					this.search(this.searchResults.number - 1);
 				}
 			},
 
-			async prevPage() {
-				try {
-					if (this.searchResults.number > 0) {
-						const prevPage = this.searchResults.number - 1;
-						const response = await this.axios.get("/searchYelyel", {
-							params: {
-								keyword: this.searchKeyword,
-								startDate: this.startDate,
-								endDate: this.endDate,
-								page: prevPage,
-								size: 20,
-							},
-						});
-						this.searchResults = response.data;
-					}
-				} catch (error) {
-					console.error(error);
+			nextPage() {
+				if (this.searchResults.number < this.searchResults.totalPages - 1) {
+					this.search(this.searchResults.number + 1);
 				}
+			},
+
+			gotoPage(page) {
+				this.search(page);
 			},
 
 			async refreshData() {

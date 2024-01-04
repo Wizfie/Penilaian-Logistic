@@ -119,9 +119,7 @@
 						};
 						localStorage.setItem("userData", JSON.stringify(userData));
 						alert("Login Berhasil");
-						setTimeout(() => {
-							router.push("/penilaian-yelyel");
-						}, 1000);
+						router.push("/dashboard");
 					})
 					.catch((error) => {
 						console.log(error);
